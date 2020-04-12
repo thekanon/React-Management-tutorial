@@ -2,7 +2,6 @@ import React from 'react';
 import './App.css';
 import Customer from './components/Customer';
 import Paper from '@material-ui/core/Paper';
-import Talbe from '@material-ui/core/Table';
 import TableHead from '@material-ui/core/TableHead';
 import TableBody from '@material-ui/core/TableBody';
 import TableRow from '@material-ui/core/TableRow';
@@ -62,7 +61,7 @@ class App extends React.Component {
                 <TableCell>이름</TableCell>
                 <TableCell>사번</TableCell>
                 <TableCell>성별</TableCell>
-                <TableCell>과일</TableCell>
+                <TableCell>직업</TableCell>
             </TableRow>
           </TableHead>
           <TableBody>
