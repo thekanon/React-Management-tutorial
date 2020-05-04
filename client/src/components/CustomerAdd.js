@@ -10,7 +10,7 @@ class CustomerAdd extends React.Component {
             gender: '',
             job: '',
             fileName: ''
-        }    
+        }
         this.handleFormSubmit = this.handleFormSubmit.bind(this)
         this.handleFileChange = this.handleFileChange.bind(this)
         this.handleValueChange = this.handleValueChange.bind(this)
@@ -19,11 +19,19 @@ class CustomerAdd extends React.Component {
     handleFormSubmit(e) {
         e.preventDefault()
         this.addCustomer()
-        .then((response) => {
-            console.log(response.data);
+            .then((response) => {
+                console.log(e);
+                this.props.stateRefresh();
+            })
+        this.setState({
+            file: null,
+            userName: '',
+            birthday: '',
+            gender: '',
+            job: '',
+            fileName: ''
         })
     }
-
     handleFileChange(e) {
         this.setState({
             file: e.target.files[0],
@@ -35,8 +43,7 @@ class CustomerAdd extends React.Component {
         nextState[e.target.name] = e.target.value;
         this.setState(nextState);
     }
-
-    addCustomer(){
+    addCustomer() {
         const url = '/api/customers';
         const formData = new FormData();
         formData.append('image', this.state.file)
@@ -46,7 +53,7 @@ class CustomerAdd extends React.Component {
         formData.append('job', this.state.job)
         const config = {
             headers: {
-            'content-type': 'multipart/form-data'
+                'content-type': 'multipart/form-data'
             }
         }
         return post(url, formData, config)
@@ -55,15 +62,14 @@ class CustomerAdd extends React.Component {
         return (
             <form onSubmit={this.handleFormSubmit}>
                 <h1>고객 추가</h1>
-                프로필 이미지: <input type="file" name="file" file={this.state.file} value={this.state.fileName} onChange={this.handleFileChange} /><br/>
-                이름: <input type="text" name="userName" value={this.state.userName} onChange={this.handleValueChange} /><br/>
-                생년월일: <input type="text" name="birthday" value={this.state.birthday} onChange={this.handleValueChange} /><br/>
-                성별: <input type="text" name="gender" value={this.state.gender} onChange={this.handleValueChange} /><br/>
-                직업: <input type="text" name="job" value={this.state.job} onChange={this.handleValueChange} /><br/>
+                프로필 이미지: <input type="file" name="file" file={this.state.file} value={this.state.fileName} onChange={this.handleFileChange} /><br />
+                이름: <input type="text" name="userName" value={this.state.userName} onChange={this.handleValueChange} /><br />
+                생년월일: <input type="text" name="birthday" value={this.state.birthday} onChange={this.handleValueChange} /><br />
+                성별: <input type="text" name="gender" value={this.state.gender} onChange={this.handleValueChange} /><br />
+                직업: <input type="text" name="job" value={this.state.job} onChange={this.handleValueChange} /><br />
                 <button type="submit">추가하기</button>
             </form>
         )
     }
 }
-
 export default CustomerAdd
