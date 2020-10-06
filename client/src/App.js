@@ -35,7 +35,7 @@ const styles = theme => ({
         marginRight: 18
     },
     progress: {
-        margin: theme.spacing.unit * 2
+        margin: theme.spacing(2)
     },
     grow: {
         flexGrow: 1,
@@ -63,12 +63,12 @@ const styles = theme => ({
         marginLeft: 0,
         width: '100%',
         [theme.breakpoints.up('sm')]: {
-            marginLeft: theme.spacing.unit,
+            marginLeft: theme.spacing(1),
             width: 'auto',
         },
     },
     searchIcon: {
-        width: theme.spacing.unit * 9,
+        width: theme.spacing(9),
         height: '100%',
         position: 'absolute',
         pointerEvents: 'none',
@@ -81,10 +81,10 @@ const styles = theme => ({
         width: '100%',
     },
     inputInput: {
-        paddingTop: theme.spacing.unit,
-        paddingRight: theme.spacing.unit,
-        paddingBottom: theme.spacing.unit,
-        paddingLeft: theme.spacing.unit * 10,
+        paddingTop: theme.spacing(1),
+        paddingRight: theme.spacing(1),
+        paddingBottom: theme.spacing(1),
+        paddingLeft: theme.spacing(10),
         transition: theme.transitions.create('width'),
         width: '100%',
         [theme.breakpoints.up('sm')]: {
@@ -100,12 +100,14 @@ class App extends React.Component {
         super(props);
         this.state = {
             customers: '',
-            completed: 0
+            completed: 0,
+            searchKeyword: ''
         }
         this.stateRefresh = this.stateRefresh.bind(this);
         this.handleValueChange = this.handleValueChange.bind(this)
     }
     handleValueChange(e) {
+        console.log("Aaa");
         let nextState = {};
         nextState[e.target.name] = e.target.value;
         this.setState(nextState);
@@ -114,7 +116,8 @@ class App extends React.Component {
     stateRefresh() {
         this.setState({
             customers: '',
-            completed: 0
+            completed: 0,
+            searchKeyword: ''
         });
         this.callAPI()
             .then(res => this.setState({ customers: res }))
@@ -139,6 +142,14 @@ class App extends React.Component {
         this.setState({ completed: completed >= 100 ? 0 : completed + 1 });
     }
     render() {
+        const filteredComponents = (data) => {
+            data = data.filter((c) => {
+                return c.name.indexOf(this.state.searchKeyword) > -1;
+            });
+            return data.map((c) => {
+                return <Customer stateRefresh={this.stateRefresh} id={c.id} image={c.image} name={c.name} birthday={c.birthday} gender={c.gender} job={c.job} />
+            });
+        }        
         const { classes } = this.props;
         const cellList = ["번호", "프로필 이미지", "이름", "생년월일", "성별", "직업", "설정"]
         return (
@@ -177,15 +188,13 @@ class App extends React.Component {
                         <TableHead>
                             <TableRow>
                                 {cellList.map(c => {
-                                    return <TableCell className={classes.tableHead}>{c}</TableCell>
+                                    return <TableCell className={classes.tableHead} value={c}>{c}</TableCell>
                                 })}
                             </TableRow>
                         </TableHead>
                         <TableBody>
                             {this.state.customers ?
-                                this.state.customers.map(c => {
-                                    return <Customer stateRefresh={this.stateRefresh} key={c.id} id={c.id} image={c.image} name={c.name} birthday={c.birthday} gender={c.gender} job={c.job} />
-                                }) :
+                                filteredComponents(this.state.customers) :
                                 <TableRow>
                                     <TableCell colSpan="6" align="center">
                                         <CircularProgress className={classes.progress} variant="determinate" value={this.state.completed} />
